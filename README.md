@@ -44,8 +44,3 @@ Zoom IOS sdk V.5.9.6.2769
 
 ## To continue develop
 *Please don't forget to update "unzip_zoom_sdk.dart" in bin folder if you change zoom sdk version
-
-
-# flutter_zoom_sdk
-# flutter_zoom_custom
-# flutter_zoom_sdk
