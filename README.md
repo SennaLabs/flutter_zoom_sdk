@@ -20,14 +20,14 @@ Zoom IOS sdk V.5.9.6.2769
   4.1 In build.gradle (App section) update compileSDKVersion to 31
   4.2 Add/Set shrinkResources and minifyEnabled to false in buildTypes section
   4.3 Add packagingOptiond like this
-    """
+    ```
     packagingOptions {
         pickFirst 'lib/armeabi-v7a/libc++_shared.so'
         pickFirst 'lib/arm64-v8a/libc++_shared.so'
         pickFirst 'lib/x86/libc++_shared.so'
         pickFirst 'lib/x86_64/libc++_shared.so'
     }
-    """
+    ```
 5. In flutter application
   5.1 call handlePlatformChannelMethods then initZoom
   ```
