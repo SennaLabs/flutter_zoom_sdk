@@ -29,10 +29,13 @@ import us.zoom.sdk.InMeetingEventHandler;
 import us.zoom.sdk.InMeetingQAController;
 import us.zoom.sdk.InMeetingServiceListener;
 import us.zoom.sdk.InMeetingUserInfo;
+import us.zoom.sdk.MeetingParameter;
+import us.zoom.sdk.MeetingServiceListener;
+import us.zoom.sdk.MeetingStatus;
 import us.zoom.sdk.ZoomSDK;
 
 
-public class QAActivity extends ZMActivity implements InMeetingQAController.InMeetingQAListener, InMeetingServiceListener {
+public class QAActivity extends ZMActivity implements InMeetingQAController.InMeetingQAListener, InMeetingServiceListener, MeetingServiceListener {
 
 
     final String TAG = QAActivity.class.getSimpleName();
@@ -98,6 +101,7 @@ public class QAActivity extends ZMActivity implements InMeetingQAController.InMe
         }
 
         ZoomSDK.getInstance().getInMeetingService().addListener(this);
+        ZoomSDK.getInstance().getMeetingService().addListener(this);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -597,6 +601,11 @@ public class QAActivity extends ZMActivity implements InMeetingQAController.InMe
     }
 
     @Override
+    public void onMeetingCoHostChange(long userId, boolean isCoHost) {
+
+    }
+
+    @Override
     public void onActiveVideoUserChanged(long userId) {
 
     }
@@ -663,7 +672,7 @@ public class QAActivity extends ZMActivity implements InMeetingQAController.InMe
 
     @Override
     public void onMeetingActiveVideo(long userId) {
-        
+
     }
 
     @Override
@@ -678,6 +687,11 @@ public class QAActivity extends ZMActivity implements InMeetingQAController.InMe
 
     @Override
     public void onUserNameChanged(long userId, String name) {
+
+    }
+
+    @Override
+    public void onUserNamesChanged(List<Long> userList) {
 
     }
 
@@ -722,7 +736,7 @@ public class QAActivity extends ZMActivity implements InMeetingQAController.InMe
     }
 
     @Override
-    public void onClosedCaptionReceived(String message) {
+    public void onClosedCaptionReceived(String message, long senderId) {
 
     }
 
@@ -732,7 +746,7 @@ public class QAActivity extends ZMActivity implements InMeetingQAController.InMe
     }
 
     @Override
-    public void onLocalRecordingStatus(RecordingStatus status) {
+    public void onLocalRecordingStatus(long userId,RecordingStatus status) {
 
     }
 
@@ -742,12 +756,38 @@ public class QAActivity extends ZMActivity implements InMeetingQAController.InMe
     }
 
     @Override
-    public void onVideoOrderUpdated(List<Long> orderList) {
+    public void onHostVideoOrderUpdated(List<Long> orderList) {
 
     }
 
     @Override
     public void onFollowHostVideoOrderChanged(boolean bFollow) {
+
+    }
+
+    @Override
+    public void onMeetingStatusChanged(MeetingStatus meetingStatus, int errorCode, int internalErrorCode) {
+        if (meetingStatus == MeetingStatus.MEETING_STATUS_RECONNECTING) {
+            finish();
+        }
+    }
+
+    @Override
+    public void onMeetingParameterNotification(MeetingParameter meetingParameter) {
+
+    }
+
+    @Override
+    public void onPermissionRequested(String[] permissions) {
+
+    }
+
+    @Override
+    public void onAllHandsLowered() {
+
+    }
+    @Override
+    public void onLocalVideoOrderUpdated(List<Long> localOrderList) {
 
     }
 }

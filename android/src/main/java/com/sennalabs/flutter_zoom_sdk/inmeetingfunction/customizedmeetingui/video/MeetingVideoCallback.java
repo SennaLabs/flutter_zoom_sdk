@@ -41,7 +41,7 @@ public class MeetingVideoCallback extends BaseCallback<MeetingVideoCallback.Vide
     SimpleInMeetingListener videoListener = new SimpleInMeetingListener() {
 
         @Override
-        public void onUserVideoStatusChanged(long userId, InMeetingServiceListener.VideoStatus status) {
+        public void onUserVideoStatusChanged(long userId, VideoStatus status) {
             for (VideoEvent event : callbacks) {
                 event.onUserVideoStatusChanged(userId);
             }

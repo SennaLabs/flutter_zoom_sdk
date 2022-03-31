@@ -1,8 +1,11 @@
 package com.sennalabs.flutter_zoom_sdk;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +14,8 @@ import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
+
+import androidx.core.app.ActivityCompat;
 
 import us.zoom.sdk.CameraDevice;
 import us.zoom.sdk.InMeetingEventHandler;
@@ -89,6 +94,14 @@ public class MyMeetingActivity extends MeetingActivity implements MeetingCommonC
     @Override
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
+        if (!ZoomSDK.getInstance().isInitialized()) {
+            finish();
+            return;
+        }
+        if (Build.VERSION.SDK_INT >= 23 && checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(MyMeetingActivity.this, new String[]{android.Manifest.permission.CAMERA}, 1001);
+        }
+
         registerListener();
 
         mTopBar = findViewById(R.id.top_bar);

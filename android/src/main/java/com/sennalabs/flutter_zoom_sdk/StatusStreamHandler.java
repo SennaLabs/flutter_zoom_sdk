@@ -9,6 +9,7 @@ import java.util.List;
 
 import io.flutter.plugin.common.EventChannel;
 import us.zoom.sdk.MeetingError;
+import us.zoom.sdk.MeetingParameter;
 import us.zoom.sdk.MeetingService;
 import us.zoom.sdk.MeetingServiceListener;
 import us.zoom.sdk.MeetingStatus;
@@ -37,19 +38,23 @@ public class StatusStreamHandler implements EventChannel.StreamHandler {
                     return;
                 }
                 if (meetingStatus == MeetingStatus.MEETING_STATUS_CONNECTING) {
-                    System.out.println("CALLLLLLL STATUS LISTENRER");
-                    showMeetingUi();
+//                    System.out.println("CALLLLLLL STATUS LISTENRER");
+//                    showMeetingUi();
                 }
                 if(meetingStatus == MeetingStatus.MEETING_STATUS_INMEETING) {
                     long myUserId = ZoomSDK.getInstance().getInMeetingService().getMyUserID();
-                    System.out.println("MY User Id =>>>>>>>>>" + myUserId);
+//                    System.out.println("MY User Id =>>>>>>>>>" + myUserId);
                     MobileRTCSDKError result = ZoomSDK.getInstance().getInMeetingService().changeName(FlutterZoomSdkPlugin.INSTANCE.getDisplayName(), myUserId);
-                    System.out.println("RESULT change name =>>>>" + result);
+//                    System.out.println("RESULT change name =>>>>" + result);
                 }
 
                 events.success(getMeetingStatusMessage(meetingStatus));
             }
 
+            @Override
+            public void onMeetingParameterNotification(MeetingParameter meetingParameter) {
+
+            }
 
         };
 
@@ -109,15 +114,15 @@ public class StatusStreamHandler implements EventChannel.StreamHandler {
         return Arrays.asList(message);
     }
 
-    private void showMeetingUi() {
-        if (ZoomSDK.getInstance().getMeetingSettingsHelper().isCustomizedMeetingUIEnabled()) {
+//    private void showMeetingUi() {
+//        if (ZoomSDK.getInstance().getMeetingSettingsHelper().isCustomizedMeetingUIEnabled()) {
 //            Intent intent = new Intent(context, MyMeetingActivity.class);
 //            intent.putExtra("from", MyMeetingActivity.JOIN_FROM_APIUSER);
 //            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 //            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 //            context.startActivity(intent);
-        }
-    }
+//        }
+//    }
 
 }
 

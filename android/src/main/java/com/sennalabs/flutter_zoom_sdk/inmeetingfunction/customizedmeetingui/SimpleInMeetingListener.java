@@ -66,6 +66,11 @@ public abstract class SimpleInMeetingListener implements InMeetingServiceListene
     }
 
     @Override
+    public void onMeetingCoHostChange(long userId, boolean isCoHost) {
+
+    }
+
+    @Override
     public void onActiveVideoUserChanged(long var1) {
 
     }
@@ -162,6 +167,11 @@ public abstract class SimpleInMeetingListener implements InMeetingServiceListene
     }
 
     @Override
+    public void onUserNamesChanged(List<Long> userList) {
+
+    }
+
+    @Override
     public void onFreeMeetingNeedToUpgrade(FreeMeetingNeedUpgradeType type, String gifUrl) {
 
     }
@@ -182,7 +192,7 @@ public abstract class SimpleInMeetingListener implements InMeetingServiceListene
     }
 
     @Override
-    public void onClosedCaptionReceived(String message) {
+    public void onClosedCaptionReceived(String message,long senderId) {
 
     }
 
@@ -192,7 +202,7 @@ public abstract class SimpleInMeetingListener implements InMeetingServiceListene
     }
 
     @Override
-    public void onLocalRecordingStatus(RecordingStatus status) {
+    public void onLocalRecordingStatus(long userId,RecordingStatus status) {
 
     }
 
@@ -202,12 +212,26 @@ public abstract class SimpleInMeetingListener implements InMeetingServiceListene
     }
 
     @Override
-    public void onVideoOrderUpdated(List<Long> orderList) {
+    public void onHostVideoOrderUpdated(List<Long> orderList) {
 
     }
 
     @Override
     public void onFollowHostVideoOrderChanged(boolean bFollow) {
+
+    }
+
+    @Override
+    public void onPermissionRequested(String[] permissions) {
+
+    }
+
+    @Override
+    public void onAllHandsLowered() {
+    }
+
+    @Override
+    public void onLocalVideoOrderUpdated(List<Long> localOrderList) {
 
     }
 }

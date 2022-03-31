@@ -36,6 +36,7 @@ import us.zoom.sdk.InMeetingEventHandler;
 import us.zoom.sdk.InMeetingServiceListener;
 import us.zoom.sdk.InMeetingShareController;
 import us.zoom.sdk.InMeetingUserInfo;
+import us.zoom.sdk.MeetingParameter;
 import us.zoom.sdk.MeetingServiceListener;
 import us.zoom.sdk.MeetingStatus;
 import us.zoom.sdk.ShareSettingType;
@@ -231,7 +232,7 @@ public class RawDataMeetingActivity extends FragmentActivity implements InMeetin
 
     private boolean checkVideoPermission() {
         if (Build.VERSION.SDK_INT >= 23 && checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, REQUEST_CAMERA_CODE);
+            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.CAMERA}, REQUEST_CAMERA_CODE);
             return false;
         }
         return true;
@@ -363,8 +364,8 @@ public class RawDataMeetingActivity extends FragmentActivity implements InMeetin
     MeetingAudioHelper.AudioCallBack audioCallBack = new MeetingAudioHelper.AudioCallBack() {
         @Override
         public boolean requestAudioPermission() {
-            if (Build.VERSION.SDK_INT >= 23 && checkSelfPermission(Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(RawDataMeetingActivity.this, new String[]{Manifest.permission.RECORD_AUDIO}, REQUEST_AUDIO_CODE);
+            if (Build.VERSION.SDK_INT >= 23 && checkSelfPermission(android.Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(RawDataMeetingActivity.this, new String[]{android.Manifest.permission.RECORD_AUDIO}, REQUEST_AUDIO_CODE);
                 return false;
             }
             return true;
@@ -406,6 +407,11 @@ public class RawDataMeetingActivity extends FragmentActivity implements InMeetin
             myUserId = 0;
             bigVideo.unSubscribe();
             Toast.makeText(this, "In waiting room", Toast.LENGTH_LONG).show();
+        }
+        if (meetingStatus == MeetingStatus.MEETING_STATUS_RECONNECTING) {
+            audioRawDataUtil.unSubscribe();
+            releaseResource();
+            finish();
         }
 
     }
@@ -533,6 +539,11 @@ public class RawDataMeetingActivity extends FragmentActivity implements InMeetin
     }
 
     @Override
+    public void onMeetingCoHostChange(long userId, boolean isCoHost) {
+
+    }
+
+    @Override
     public void onActiveVideoUserChanged(long userId) {
 
     }
@@ -649,6 +660,11 @@ public class RawDataMeetingActivity extends FragmentActivity implements InMeetin
     }
 
     @Override
+    public void onUserNamesChanged(List<Long> userList) {
+
+    }
+
+    @Override
     public void onUserVideoStatusChanged(long userId, VideoStatus status) {
         InMeetingUserInfo userInfo = ZoomSDK.getInstance().getInMeetingService().getUserInfoById(userId);
         if (null == userInfo) {
@@ -699,7 +715,7 @@ public class RawDataMeetingActivity extends FragmentActivity implements InMeetin
     }
 
     @Override
-    public void onClosedCaptionReceived(String message) {
+    public void onClosedCaptionReceived(String message,long senderId) {
 
     }
 
@@ -709,7 +725,7 @@ public class RawDataMeetingActivity extends FragmentActivity implements InMeetin
     }
 
     @Override
-    public void onLocalRecordingStatus(RecordingStatus status) {
+    public void onLocalRecordingStatus(long userId,RecordingStatus status) {
 
     }
 
@@ -724,12 +740,31 @@ public class RawDataMeetingActivity extends FragmentActivity implements InMeetin
     }
 
     @Override
-    public void onVideoOrderUpdated(List<Long> orderList) {
+    public void onHostVideoOrderUpdated(List<Long> orderList) {
 
     }
 
     @Override
     public void onFollowHostVideoOrderChanged(boolean bFollow) {
+
+    }
+
+    @Override
+    public void onMeetingParameterNotification(MeetingParameter meetingParameter) {
+
+    }
+
+    @Override
+    public void onPermissionRequested(String[] permissions) {
+
+    }
+
+    @Override
+    public void onAllHandsLowered() {
+
+    }
+    @Override
+    public void onLocalVideoOrderUpdated(List<Long> localOrderList) {
 
     }
 }

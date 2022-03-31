@@ -5,6 +5,7 @@ import android.util.Log;
 
 import us.zoom.sdk.InMeetingChatMessage;
 import us.zoom.sdk.InMeetingEventHandler;
+import us.zoom.sdk.MeetingParameter;
 import us.zoom.sdk.MeetingServiceListener;
 import us.zoom.sdk.MeetingStatus;
 import us.zoom.sdk.ZoomSDK;
@@ -14,6 +15,7 @@ import com.sennalabs.flutter_zoom_sdk.inmeetingfunction.customizedmeetingui.Simp
 
 public class MeetingCommonCallback extends BaseCallback<MeetingCommonCallback.CommonEvent> {
 
+    final static String TAG= "MeetingCommonCallback";
 
     public interface CommonEvent extends BaseEvent {
 
@@ -63,6 +65,11 @@ public class MeetingCommonCallback extends BaseCallback<MeetingCommonCallback.Co
             for (CommonEvent event : callbacks) {
                 event.onMeetingStatusChanged(meetingStatus, errorCode, internalErrorCode);
             }
+        }
+
+        @Override
+        public void onMeetingParameterNotification(MeetingParameter meetingParameter) {
+            Log.d(TAG, "onMeetingParameterNotification:" + meetingParameter);
         }
     };
 
@@ -130,3 +137,4 @@ public class MeetingCommonCallback extends BaseCallback<MeetingCommonCallback.Co
 
 
 }
+

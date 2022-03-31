@@ -16,6 +16,7 @@ public class MeetingAudioCallback extends BaseCallback<MeetingAudioCallback.Audi
         void onUserAudioTypeChanged(long userId);
 
         void onMyAudioSourceTypeChanged(int type);
+        void onPermissionRequested(String[] permissions);
     }
 
     static MeetingAudioCallback instance;
@@ -41,9 +42,15 @@ public class MeetingAudioCallback extends BaseCallback<MeetingAudioCallback.Audi
 
 
     SimpleInMeetingListener audioListener = new SimpleInMeetingListener() {
+        @Override
+        public void onPermissionRequested(String[] permissions) {
+            for (AudioEvent event : callbacks) {
+                event.onPermissionRequested(permissions);
+            }
+        }
 
         @Override
-        public void onUserAudioStatusChanged(long userId, InMeetingServiceListener.AudioStatus audioStatus) {
+        public void onUserAudioStatusChanged(long userId, AudioStatus audioStatus) {
             for (AudioEvent event : callbacks) {
                 event.onUserAudioStatusChanged(userId);
             }
