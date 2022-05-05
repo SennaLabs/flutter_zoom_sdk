@@ -255,7 +255,7 @@ public class FlutterZoomSdkPlugin implements FlutterPlugin, MethodCallHandler, A
 
     public void disJoin(MethodCall methodCall, MethodChannel.Result result) {
         ZoomSDK.getInstance().getMeetingService().leaveCurrentMeeting(true);
-        result.success(String.valueOf(true));
+        result.success(true);
     }
 
 
