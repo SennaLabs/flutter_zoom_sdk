@@ -23,4 +23,7 @@
 -(NSString*) getStateMessage:(MobileRTCMeetingState )state;
 
 +(void) openVote;
+
+-(void) disJoin:(FlutterMethodCall *)call withResult:(FlutterResult) result;
+
 @end

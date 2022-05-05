@@ -51,7 +51,7 @@ public class FlutterZoomSdkPlugin implements FlutterPlugin, MethodCallHandler, A
 
     static public FlutterZoomSdkPlugin INSTANCE;
 
-//    GETTER ZONE
+    //    GETTER ZONE
     public String getDisplayName() {
         return displayName;
     }
@@ -59,7 +59,6 @@ public class FlutterZoomSdkPlugin implements FlutterPlugin, MethodCallHandler, A
     public String getEmail() {
         return email;
     }
-
 
 
     @Override
@@ -78,11 +77,11 @@ public class FlutterZoomSdkPlugin implements FlutterPlugin, MethodCallHandler, A
             init(call, result);
         } else if (call.method.equals("join")) {
             joinMeeting(call, result);
-        }
-        else if(call.method.equals("get_zoom_user_id")) {
+        } else if (call.method.equals("get_zoom_user_id")) {
             getZoomUserId(call, result);
-
-        }else {
+        } else if (call.method.equals("disJoin")) {
+            disJoin(call, result);
+        } else {
             result.notImplemented();
         }
     }
@@ -165,6 +164,7 @@ public class FlutterZoomSdkPlugin implements FlutterPlugin, MethodCallHandler, A
         long myUserId = ZoomSDK.getInstance().getInMeetingService().getMyUserID();
         result.success(String.valueOf(myUserId));
     }
+
     public void joinMeeting(MethodCall methodCall, MethodChannel.Result result) {
 
         Map<String, String> options = methodCall.arguments();
@@ -184,7 +184,7 @@ public class FlutterZoomSdkPlugin implements FlutterPlugin, MethodCallHandler, A
         opts.webinar_token = options.get("webinarToken");
         opts.no_invite = true;
 //        opts.no_share = true;
-        opts.no_titlebar =  true;
+        opts.no_titlebar = true;
 //        opts.no_driving_mode = parseBoolean(options, "disableDrive");
 //        opts.no_dial_in_via_phone = parseBoolean(options, "disableDialIn");
 //        opts.no_disconnect_audio = parseBoolean(options, "noDisconnectAudio");
@@ -202,10 +202,8 @@ public class FlutterZoomSdkPlugin implements FlutterPlugin, MethodCallHandler, A
         params.password = options.get("password");
 
 
-
         this.displayName = options.get("displayName");
         this.email = options.get("email");
-
 
 
         ZoomSDK.getInstance().getMeetingSettingsHelper().setCustomizedMeetingUIEnabled(false);
@@ -253,6 +251,11 @@ public class FlutterZoomSdkPlugin implements FlutterPlugin, MethodCallHandler, A
                 });
             }
         });
+    }
+
+    public void disJoin(MethodCall methodCall, MethodChannel.Result result) {
+        ZoomSDK.getInstance().getMeetingService().leaveCurrentMeeting(true);
+        result.success(String.valueOf(true));
     }
 
 

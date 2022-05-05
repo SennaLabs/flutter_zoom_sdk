@@ -12,16 +12,16 @@
 FlutterMethodChannel* channel;
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar>*)registrar {
     channel = [FlutterMethodChannel
-      methodChannelWithName:@"flutter_zoom_sdk"
-            binaryMessenger:[registrar messenger]];
-  FlutterZoomSdkPlugin* instance = [[FlutterZoomSdkPlugin alloc] init];
-  [registrar addMethodCallDelegate:instance channel:channel];
+               methodChannelWithName:@"flutter_zoom_sdk"
+               binaryMessenger:[registrar messenger]];
+    FlutterZoomSdkPlugin* instance = [[FlutterZoomSdkPlugin alloc] init];
+    [registrar addMethodCallDelegate:instance channel:channel];
     [registrar addApplicationDelegate:instance];
     
     
     FlutterEventChannel* eventChannel = [FlutterEventChannel
-        eventChannelWithName:@"flutter_zoom_sdk_event_stream"
-              binaryMessenger:[registrar messenger]];
+                                         eventChannelWithName:@"flutter_zoom_sdk_event_stream"
+                                         binaryMessenger:[registrar messenger]];
     [eventChannel setStreamHandler:instance];
 }
 
@@ -31,22 +31,24 @@ FlutterMethodChannel* channel;
     if (ms)
     {
         ms.delegate = self;
-//        ms.customizedUImeetingDelegate = self;
+        //        ms.customizedUImeetingDelegate = self;
     }
 }
 
 - (void)handleMethodCall:(FlutterMethodCall*)call result:(FlutterResult)result {
-  if ([@"init" isEqualToString:call.method]) {
-      return [self init:call withResult:result];
-  } else if ([@"join" isEqualToString:call.method]) {
-      return [self join:call withResult:result];
-  } else if ([@"meeting_status" isEqualToString:call.method]) {
-      return [self meetingStatus:call withResult:result];
-  } else if([@"get_zoom_user_id" isEqualToString:call.method]) {
-      return [self getZoomUserId:call withResult:result];
-  }else {
-    result(FlutterMethodNotImplemented);
-  }
+    if ([@"init" isEqualToString:call.method]) {
+        return [self init:call withResult:result];
+    } else if ([@"join" isEqualToString:call.method]) {
+        return [self join:call withResult:result];
+    } else if ([@"meeting_status" isEqualToString:call.method]) {
+        return [self meetingStatus:call withResult:result];
+    } else if([@"get_zoom_user_id" isEqualToString:call.method]) {
+        return [self getZoomUserId:call withResult:result];
+    } else if([@"disJoin" isEqualToString:call.method]) {
+        return [self disJoin:call withResult:result];
+    } else {
+        result(FlutterMethodNotImplemented);
+    }
 }
 
 - (void) init:(FlutterMethodCall *)call withResult:(FlutterResult) result {
@@ -55,24 +57,24 @@ FlutterMethodChannel* channel;
     NSString* domain = call.arguments[@"domain"];
     
     MobileRTCSDKInitContext *context = [[MobileRTCSDKInitContext alloc] init];
-        context.domain = domain;
-        context.enableLog = YES;
+    context.domain = domain;
+    context.enableLog = YES;
     // Initialize the SDK
-        BOOL sdkInitSuc = [[MobileRTC sharedRTC] initialize:context];
-
-        if (sdkInitSuc) {
-           // Get Auth Service
-            MobileRTCAuthService *authService = [[MobileRTC sharedRTC] getAuthService];
+    BOOL sdkInitSuc = [[MobileRTC sharedRTC] initialize:context];
+    
+    if (sdkInitSuc) {
+        // Get Auth Service
+        MobileRTCAuthService *authService = [[MobileRTC sharedRTC] getAuthService];
         
-            if (authService) {
-           // Set up Auth Service
-                authService.clientKey = appKey;
-                authService.clientSecret = appSecret;
-                authService.delegate = self;
+        if (authService) {
+            // Set up Auth Service
+            authService.clientKey = appKey;
+            authService.clientSecret = appSecret;
+            authService.delegate = self;
             // Call Authentication function to authenticate the SDK
-                [authService sdkAuth];
-            }
+            [authService sdkAuth];
         }
+    }
     result(@YES);
 }
 
@@ -88,18 +90,18 @@ FlutterMethodChannel* channel;
         joinParam.meetingNumber =  call.arguments[@"meetingNo"];
         joinParam.password =  call.arguments[@"password"];
         joinParam.webinarToken =  call.arguments[@"webinarToken"];;
-//        ENABLE CUSTOMIZE MEETING BEFORE JOIN
-//        [[MobileRTC sharedRTC] getMeetingSettings].enableCustomMeeting = YES;
+        //        ENABLE CUSTOMIZE MEETING BEFORE JOIN
+        //        [[MobileRTC sharedRTC] getMeetingSettings].enableCustomMeeting = YES;
         [[MobileRTC sharedRTC] getMeetingSettings].topBarHidden = YES;
         [[MobileRTC sharedRTC] getMeetingSettings].recordButtonHidden = YES;
         [[MobileRTC sharedRTC] getMeetingSettings].meetingInviteHidden = YES;
         
-    
-
-//        WEBINAR NEED REGISTER
+        
+        
+        //        WEBINAR NEED REGISTER
         self.displayName = call.arguments[@"displayName"];
         self.email = call.arguments[@"email"];
-
+        
         
         MobileRTCMeetError ret = [ms joinMeetingWithJoinParam:joinParam];
         NSLog(@"MobileRTC onJoinaMeeting ret: %@", ret == MobileRTCMeetError_Success ? @"Success" : @(ret));
@@ -116,12 +118,12 @@ FlutterMethodChannel* channel;
         result([self getStateMessage:meetingState]);
     } else {
         result( [[NSArray alloc]  initWithObjects:@"MEETING_STATUS_UNKNOWN", @"", nil]);
-       
+        
     }
 }
 
 -(NSArray*) getStateMessage:(MobileRTCMeetingState )state {
- 
+    
     switch (state) {
         case  MobileRTCMeetingState_Idle:
             return [[NSArray alloc]  initWithObjects:@"MEETING_STATUS_IDLE", @"No meeting is running", nil];
@@ -147,7 +149,7 @@ FlutterMethodChannel* channel;
             return [[NSArray alloc]  initWithObjects:@"MEETING_STATUS_IN_WAITING_ROOM", @"Participants who join the meeting before the start are in the waiting room", nil];
         default:
             return [[NSArray alloc]  initWithObjects:@"MEETING_STATUS_UNKNOWN", @"", nil];
-                       
+            
     }
 }
 
@@ -156,6 +158,14 @@ FlutterMethodChannel* channel;
     NSString *inStr = [NSString stringWithFormat: @"%ld", (long)userId];
     result(inStr);
 }
+
+- (void) disJoin:(FlutterMethodCall *)call withResult:(FlutterResult) result {
+    MobileRTCMeetingService *ms = [[MobileRTC sharedRTC] getMeetingService];
+    if (!ms) return;
+    [ms leaveMeetingWithCmd:LeaveMeetingCmd_Leave];
+    result(@YES);
+}
+
 
 #pragma mark - METHOD HANDLER
 
@@ -174,8 +184,8 @@ FlutterMethodChannel* channel;
 
 #pragma mark - MobileRTCAuthDelegate
 /**
-* To monitor the status and catch errors that might occur during the authorization process, implement the onMobileRTCAuthReturn method
-*/
+ * To monitor the status and catch errors that might occur during the authorization process, implement the onMobileRTCAuthReturn method
+ */
 - (void)onMobileRTCAuthReturn:(MobileRTCAuthError)returnValue {
     switch (returnValue) {
         case MobileRTCAuthError_Success:
