@@ -276,7 +276,7 @@ public class FlutterZoomSdkPlugin implements FlutterPlugin, MethodCallHandler, A
         System.out.println("=========onDetachedFromEngine===========");
         channel.setMethodCallHandler(null);
         meetingStatusChannel.setStreamHandler(null);
-        this.activity.finish();
+        MyMeetingActivity.getActivity("MyMeetingActivity").finish();
         ZoomSDK.getInstance().getInMeetingService().leaveCurrentMeeting(false);
     }
 
