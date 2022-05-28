@@ -1,6 +1,7 @@
 package com.sennalabs.flutter_zoom_sdk;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -43,6 +44,7 @@ public class FlutterZoomSdkPlugin implements FlutterPlugin, MethodCallHandler, A
     ///
     /// This local reference serves to register the plugin with the Flutter Engine and unregister it
     /// when the Flutter Engine is detached from the Activity
+    Activity activity;
     private MethodChannel channel;
     private Context context;
     private EventChannel meetingStatusChannel;
@@ -58,6 +60,18 @@ public class FlutterZoomSdkPlugin implements FlutterPlugin, MethodCallHandler, A
 
     public String getEmail() {
         return email;
+    }
+
+    @Override
+    public void onAttachedToActivity(@NonNull ActivityPluginBinding binding) {
+        this.activity = binding.getActivity();
+        INSTANCE = this;
+    }
+
+    @Override
+    public void onReattachedToActivityForConfigChanges(@NonNull ActivityPluginBinding binding) {
+        this.activity = binding.getActivity();
+        INSTANCE = this;
     }
 
 
@@ -86,11 +100,6 @@ public class FlutterZoomSdkPlugin implements FlutterPlugin, MethodCallHandler, A
         }
     }
 
-    @Override
-    public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
-        System.out.println("onDetachedFromEngine");
-        channel.setMethodCallHandler(null);
-    }
 
     private void init(final MethodCall methodCall, final MethodChannel.Result result) {
         Map<String, String> options = methodCall.arguments();
@@ -260,24 +269,21 @@ public class FlutterZoomSdkPlugin implements FlutterPlugin, MethodCallHandler, A
 
 
     @Override
-    public void onAttachedToActivity(@NonNull ActivityPluginBinding binding) {
-        INSTANCE = this;
-    }
-
-    @Override
-    public void onDetachedFromActivityForConfigChanges() {
-
-    }
-
-    @Override
-    public void onReattachedToActivityForConfigChanges(@NonNull ActivityPluginBinding binding) {
-
+    public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
+        System.out.println("onDetachedFromEngine");
+        channel.setMethodCallHandler(null);
+        meetingStatusChannel.setStreamHandler(null);
     }
 
     @Override
     public void onDetachedFromActivity() {
-
+        this.activity = null;
+        INSTANCE = null;
     }
 
-
+    @Override
+    public void onDetachedFromActivityForConfigChanges( ) {
+        this.activity = null;
+        INSTANCE = null;
+    }
 }
