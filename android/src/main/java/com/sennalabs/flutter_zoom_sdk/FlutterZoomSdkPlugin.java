@@ -161,6 +161,7 @@ public class FlutterZoomSdkPlugin implements FlutterPlugin, MethodCallHandler, A
 
                 MeetingService meetingService = zoomSDK.getMeetingService();
                 meetingStatusChannel.setStreamHandler(new StatusStreamHandler(meetingService, context));
+
                 result.success(true);
             }
 
@@ -276,8 +277,9 @@ public class FlutterZoomSdkPlugin implements FlutterPlugin, MethodCallHandler, A
         System.out.println("=========onDetachedFromEngine===========");
         channel.setMethodCallHandler(null);
         meetingStatusChannel.setStreamHandler(null);
-        MyMeetingActivity.getActivity("MyMeetingActivity").finish();
         ZoomSDK.getInstance().getInMeetingService().leaveCurrentMeeting(false);
+//        System.out.println("=========GOING TO CALL SYSTEM EXIT 0===========");
+        System.exit(0);
     }
 
     @Override
