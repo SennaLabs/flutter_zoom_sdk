@@ -64,12 +64,14 @@ public class FlutterZoomSdkPlugin implements FlutterPlugin, MethodCallHandler, A
 
     @Override
     public void onAttachedToActivity(@NonNull ActivityPluginBinding binding) {
+        System.out.println("=========onAttachedToActivity===========");
         this.activity = binding.getActivity();
         INSTANCE = this;
     }
 
     @Override
     public void onReattachedToActivityForConfigChanges(@NonNull ActivityPluginBinding binding) {
+        System.out.println("=========onReattachedToActivityForConfigChanges===========");
         this.activity = binding.getActivity();
         INSTANCE = this;
     }
@@ -77,6 +79,7 @@ public class FlutterZoomSdkPlugin implements FlutterPlugin, MethodCallHandler, A
 
     @Override
     public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
+        System.out.println("=========onAttachedToEngine===========");
         context = flutterPluginBinding.getApplicationContext();
         channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), "flutter_zoom_sdk");
         System.out.println("SET METHOD CHANNEL");
@@ -270,19 +273,21 @@ public class FlutterZoomSdkPlugin implements FlutterPlugin, MethodCallHandler, A
 
     @Override
     public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
-        System.out.println("onDetachedFromEngine");
+        System.out.println("=========onDetachedFromEngine===========");
         channel.setMethodCallHandler(null);
         meetingStatusChannel.setStreamHandler(null);
     }
 
     @Override
     public void onDetachedFromActivity() {
+        System.out.println("=========onDetachedFromActivity===========");
         this.activity = null;
         INSTANCE = null;
     }
 
     @Override
     public void onDetachedFromActivityForConfigChanges( ) {
+        System.out.println("=========onDetachedFromActivityForConfigChanges===========");
         this.activity = null;
         INSTANCE = null;
     }
