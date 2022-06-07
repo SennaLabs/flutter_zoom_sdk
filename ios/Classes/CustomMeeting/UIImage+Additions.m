@@ -26,8 +26,13 @@
 }
 //
 + (UIImage*)imageNamed:(NSString *)name {
-    UIImage *aImage = [UIImage imageNamed:name inBundle:[NSBundle bundleWithIdentifier:@"org.cocoapods.flutter-zoom-sdk"] withConfiguration:nil];
-    return aImage;
+    if (@available(iOS 13.0, *)) {
+        UIImage *aImage = [UIImage imageNamed:name inBundle:[NSBundle bundleWithIdentifier:@"org.cocoapods.flutter-zoom-sdk"] withConfiguration:nil];
+        return aImage;
+    } else {
+        UIImage *aImage = [UIImage imageNamed:name inBundle:[NSBundle bundleWithIdentifier:@"org.cocoapods.flutter-zoom-sdk"] compatibleWithTraitCollection:nil];
+        return aImage;
+    }
 }
 
 @end
